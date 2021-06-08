@@ -1,102 +1,92 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-import { GoogleOutlined, LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
-import { Row, Col, Tabs, Form, Input, Checkbox, Button, Divider } from "antd";
+import { useRouter } from "next/router";
 
-import { Paper, Container, Background, StyledForm } from "./Login.styles";
+import { GoogleOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
+import { Row, Col, Form, Input, Checkbox, Button, Divider, message } from "antd";
 
-const { TabPane } = Tabs;
+import { StyledForm } from "./Auth.styles";
+
+import firebaseInit from "../firebase";
+import firebase from "firebase/app";
+import "firebase/auth";
 
 const iconStyle = { color: "rgb(133, 133, 133)" };
 
-export const Login = () => (
-  <StyledForm>
-    <Form.Item
-      name='email'
-      hasFeedback
-      rules={[
-        { type: "email", message: "Veuillez entrer un email valide !" },
-        { required: true, message: "Veuillez entrer votre email !" },
-      ]}
-    >
-      <Input prefix={<MailOutlined style={iconStyle} />} placeholder='Email' />
-    </Form.Item>
-    <Form.Item
-      name='password'
-      hasFeedback
-      rules={[{ required: true, message: "Veuillez entrez votre mot de passe !" }]}
-    >
-      <Input.Password prefix={<LockOutlined style={iconStyle} />} placeholder='Mot de passe' />
-    </Form.Item>
-    <Row>
-      <Col>
-        <Form.Item name='remember-me'>
-          <Checkbox value='yes'>Se rappeler</Checkbox>
-        </Form.Item>
-      </Col>
-      <Col flex='auto' />
-      <Col>
-        <Button type='link'>Mot de passe oublié</Button>
-      </Col>
-    </Row>
-    <Button type='primary' block htmlType='submit'>
-      Valider
-    </Button>
-    <Divider plain>Ou</Divider>
-    <Button type='default' danger block icon={<GoogleOutlined />} disabled>
-      Connexion avec Google
-    </Button>
-  </StyledForm>
-);
+export const Login = () => {
+  useEffect(() => {
+    firebaseInit();
+  }, []);
 
-export const Signup = () => (
-  <StyledForm>
-    <Form.Item
-      hasFeedback
-      name='pseudo'
-      rules={[{ required: true, message: "Veuillez entrer votre pseudo !" }]}
-    >
-      <Input prefix={<UserOutlined style={iconStyle} />} placeholder='Pseudo' />
-    </Form.Item>
-    <Form.Item
-      hasFeedback
-      name='email'
-      rules={[
-        { type: "email", message: "Veuillez entrer un email valide !" },
-        { required: true, message: "Veuillez entrer votre email !" },
-      ]}
-    >
-      <Input prefix={<MailOutlined style={iconStyle} />} placeholder='Email' />
-    </Form.Item>
-    <Form.Item
-      hasFeedback
-      name='password'
-      rules={[{ required: true, message: "Veuillez entrer votre mot de passe !" }]}
-    >
-      <Input.Password prefix={<LockOutlined style={iconStyle} />} placeholder='Mot de passe' />
-    </Form.Item>
-    <Form.Item
-      hasFeedback
-      name='cpassword'
-      rules={[
-        { required: true, message: "Veuillez confirmer votre mot de passe !" },
-        ({ getFieldValue }) => ({
-          validator(_, value) {
-            if (!value || getFieldValue("password") === value) {
-              return Promise.resolve();
-            }
-            return Promise.reject(new Error("Les deux mot de passe ne correspondent pas !"));
-          },
-        }),
-      ]}
-    >
-      <Input.Password
-        prefix={<LockOutlined style={iconStyle} />}
-        placeholder='Confirmer le mot de passe'
-      />
-    </Form.Item>
-    <Button type='primary' htmlType='submit' block style={{ marginTop: "2rem" }}>
-      Valider
-    </Button>
-  </StyledForm>
-);
+  const router = useRouter();
+
+  const redirectUser = (location: string | string[]) => {
+    switch (location) {
+      case "profile":
+        router.push("/profile");
+        break;
+      case "apply":
+        if (router.query.id) router.push(`/apply/${router.query.id}`);
+        else router.push("/");
+        break;
+      default:
+        router.push("/");
+        break;
+    }
+  };
+
+  const handleSubmit = async (values: any) => {
+    if (values.remember) await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+    try {
+      await firebase.auth().signInWithEmailAndPassword(values.email, values.password);
+      redirectUser(router.query.from);
+    } catch (err) {
+      message.error("Email ou mot de passe incorrect !");
+      console.log(err);
+    }
+  };
+
+  return (
+    <StyledForm onFinish={handleSubmit} initialValues={{ remember: true }}>
+      <Form.Item
+        name='email'
+        hasFeedback
+        rules={[
+          { type: "email", message: "Veuillez entrer un email valide !" },
+          { required: true, message: "Veuillez entrer votre email !" },
+        ]}
+      >
+        <Input prefix={<MailOutlined style={iconStyle} />} placeholder='Email' />
+      </Form.Item>
+      <Form.Item
+        name='password'
+        hasFeedback
+        rules={[{ required: true, message: "Veuillez entrez votre mot de passe !" }]}
+      >
+        <Input.Password prefix={<LockOutlined style={iconStyle} />} placeholder='Mot de passe' />
+      </Form.Item>
+      <Row>
+        <Col>
+          <Form.Item name='remember' valuePropName='checked'>
+            <Checkbox>Se rappeler</Checkbox>
+          </Form.Item>
+        </Col>
+        <Col flex='auto' />
+        <Col>
+          <Button type='link' disabled>
+            Mot de passe oublié
+          </Button>
+        </Col>
+      </Row>
+      <Button type='primary' block htmlType='submit'>
+        Valider
+      </Button>
+      <Divider plain>Ou</Divider>
+      <Button type='default' danger block icon={<GoogleOutlined />} disabled>
+        Connexion avec Google
+      </Button>
+    </StyledForm>
+  );
+};
+
+export default Login;

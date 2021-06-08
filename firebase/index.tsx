@@ -15,7 +15,6 @@ const firebaseCredentials = {
 };
 
 const initFirebase = () => {
-  console.log(firebase.app.length);
   if (!firebase.apps.length) {
     firebase.initializeApp(firebaseCredentials);
   }
