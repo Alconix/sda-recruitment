@@ -1,5 +1,4 @@
-import Document, { Head, Main, NextScript } from "next/document";
-// Import styled components ServerStyleSheet
+import Document, { Head, Main, NextScript, Html } from "next/document";
 import { ServerStyleSheet } from "styled-components";
 
 interface Props {
@@ -23,9 +22,8 @@ export default class MyDocument extends Document<Props> {
 
   render() {
     return (
-      <html>
+      <Html>
         <Head>
-          <title>My page</title>
           {/* Step 5: Output the styles in the head  */}
           {this.props.styleTags}
         </Head>
@@ -33,7 +31,7 @@ export default class MyDocument extends Document<Props> {
           <Main />
           <NextScript />
         </body>
-      </html>
+      </Html>
     );
   }
 }

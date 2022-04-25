@@ -1,24 +1,17 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import { useRouter } from "next/router";
 
 import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
 import { Form, Input, Button } from "antd";
 
-import firebase from "firebase/app";
-import "firebase/auth";
-
-import firebaseInit from "../firebase";
+import firebase from "../firebase";
 
 import { StyledForm } from "./Auth.styles";
 
 const iconStyle = { color: "rgb(133, 133, 133)" };
 
 const Signup = () => {
-  useEffect(() => {
-    firebaseInit();
-  }, []);
-
   const router = useRouter();
 
   const redirectUser = (location: string | string[]) => {
@@ -37,10 +30,13 @@ const Signup = () => {
   };
 
   const handleSubmit = async (values: any) => {
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
     await firebase.auth().createUserWithEmailAndPassword(values.email, values.password);
 
     const user = firebase.auth().currentUser;
     await user.updateProfile({ displayName: values.pseudo });
+
+    redirectUser(router.query.from);
   };
 
   return (

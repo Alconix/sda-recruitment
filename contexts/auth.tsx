@@ -1,45 +1,51 @@
-import React, { useCallback, useEffect, useReducer } from "react";
-import firebase from "firebase/app";
-import "firebase/auth";
-import firebaseInit from "../firebase";
+import { createContext, useEffect, useState, useContext } from "react";
+import nookies from "nookies";
 
-const SET_USER = "SET_USER";
-const UNSET_USER = "UNSET_USER";
+import { auth } from "../firebase/admin";
+import firebase from "../firebase";
 
-const authReducer = (state, action) => {
-  switch (action.type) {
-    case SET_USER:
-      return {
-        ...state,
-        isLoading: false,
-        user: (action.user && action.user.attributes) || null,
-      };
-    case UNSET_USER:
-      return { ...state, isLoading: false, user: null };
-    default:
-      throw new Error(`Invalid action type: ${action.type}`);
-  }
-};
+const AuthContext = createContext({
+  user: null,
+});
 
-export const AuthContext = React.createContext(null);
+export function AuthProvider({ children }: any) {
+  const [user, setUser] = useState(null);
 
-export const AuthProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(authReducer, { isLoading: true, user: null });
+  // listen for token changes
+  // call setUser and write new token as a cookie
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      (window as any).nookies = nookies;
+    }
 
-  const isSignedIn = !!(state.user && state.user.sub);
-  const userId = (state.user && state.user.sub) || null;
+    return firebase.auth().onIdTokenChanged(async (user) => {
+      if (!user) {
+        setUser(null);
+        nookies.set(undefined, "token", "", { path: "/" });
+        nookies.destroy(null, "token");
+      } else {
+        const token = await user.getIdToken();
+        setUser(user);
+        nookies.destroy(null, "token");
+        nookies.set(undefined, "token", token, { path: "/" });
+      }
+    });
+  }, []);
 
-  const setUser = useCallback((user) => dispatch({ type: SET_USER, user }), []);
-  const unsetUser = useCallback(() => dispatch({ type: UNSET_USER }), []);
+  // force refresh the token every 10 minutes
+  useEffect(() => {
+    const handle = setInterval(async () => {
+      const user = firebase.auth().currentUser;
+      if (user) await user.getIdToken(true);
+    }, 10 * 60 * 1000);
 
-  firebase.auth().onAuthStateChanged((user) => {
-    if (user) setUser(user);
-    else unsetUser();
-  });
+    // clean up setInterval
+    return () => clearInterval(handle);
+  }, []);
 
-  return (
-    <AuthContext.Provider value={{ isSignedIn, userId, userAttrs: state.user, setUser, unsetUser }}>
-      {state.isLoading ? <div>Loading ...</div> : children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>;
+}
+
+export const useAuth = () => {
+  return useContext(AuthContext);
 };

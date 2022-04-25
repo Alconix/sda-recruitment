@@ -3,12 +3,7 @@ import styled from "styled-components";
 import { Tabs, Form } from "antd";
 
 export const Container = styled.div`
-  position: fixed;
-  left: 0;
-  right: 0;
-  z-index: 1;
-  margin-left: 20px;
-  margin-right: 20px;
+  flex: 1;
 `;
 
 export const Background = styled.div`
@@ -17,7 +12,7 @@ export const Background = styled.div`
   right: 0;
   z-index: 1;
   display: block;
-  background-image: url("/background-sl.jpg");
+  background-image: url("/background-df.png");
   background-size: cover;
   height: 100vh;
   -webkit-filter: blur(5px);

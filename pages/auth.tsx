@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
+import { withAuthUser, AuthAction } from "next-firebase-auth";
 import { Row, Col, Tabs } from "antd";
-import { useRouter } from "next/router";
-import firebase from "firebase/app";
 import "firebase/auth";
-
-import firebaseInit from "../firebase";
 
 import Login from "../components/Login";
 import Signup from "../components/Signup";
@@ -17,20 +14,16 @@ import "antd/dist/antd.css";
 
 const { TabPane } = Tabs;
 
-const IndexPage = () => {
-  useEffect(() => {
-    firebaseInit();
-  }, []);
-
+const Auth = () => {
   return (
     <Layout>
-      <Row justify='center' align='middle' style={{ display: "flex", height: "90vh" }}>
+      <Row justify="center" align="middle" style={{ display: "flex", height: "100vh" }}>
         <Col>
-          <Paper defaultActiveKey='1' centered type='line' style={{ padding: "2rem" }}>
-            <TabPane tab='Connexion' key='1'>
+          <Paper defaultActiveKey="1" centered type="line" style={{ padding: "2rem" }}>
+            <TabPane tab="Connexion" key="1">
               <Login />
             </TabPane>
-            <TabPane tab='Inscription' key='2'>
+            <TabPane tab="Inscription" key="2">
               <Signup />
             </TabPane>
           </Paper>
@@ -40,4 +33,8 @@ const IndexPage = () => {
   );
 };
 
-export default IndexPage;
+export default withAuthUser({
+  whenAuthed: AuthAction.REDIRECT_TO_APP,
+  whenUnauthedBeforeInit: AuthAction.RETURN_NULL,
+  whenUnauthedAfterInit: AuthAction.RENDER,
+})(Auth);
