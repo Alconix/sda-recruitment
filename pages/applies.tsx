@@ -44,13 +44,9 @@ export const getServerSideProps = withAuthUserTokenSSR({
   whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
 })(async ({ AuthUser }) => {
   try {
-    console.log(AuthUser);
-
     const user = await db.collection("users").doc(AuthUser.id).get();
     const userData = user.data();
     userData.uid = AuthUser.id;
-
-    console.log(user.data());
 
     const isMember = canVote(user.data().role);
     const res = await db.collection("appli").orderBy("date", "desc").get();

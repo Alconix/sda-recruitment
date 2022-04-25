@@ -34,7 +34,11 @@ const initAuth = () => {
       let destUrl = "/";
 
       if (destinationParamVal) {
-        const allowedHosts = ["localhost:3000", "secretdesanciens.fr"];
+        const allowedHosts = [
+          "localhost:3000",
+          "secretdesanciens.fr",
+          "sda-recruitment.vercel.app",
+        ];
         const allowed = allowedHosts.includes(new URL(destinationParamVal).host);
         if (allowed) destUrl = destinationParamVal;
         else console.warn("Redirect to non-allowed host:", destinationParamVal);
