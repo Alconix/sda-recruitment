@@ -6,6 +6,7 @@ import Layout from "../components/Layout";
 import { Paper } from "../components/Layout.styles";
 import Profile from "../components/Profile";
 import { db, storage } from "../firebase/admin";
+import { timestampToString } from "../utils/time";
 
 type ProfileDataType = {
   user: any;
@@ -39,6 +40,13 @@ export const getServerSideProps = withAuthUserSSR({
 
     const user = await db.collection("users").doc(AuthUser.id).get();
     const userData = user.data();
+
+    userData.lastSignInTime = userData.lastSignInTime.seconds
+      ? userData.lastSignInTime.seconds * 1000
+      : userData.lastSignInTime;
+    userData.creationTime = userData.creationTime.seconds
+      ? userData.creationTime.seconds * 1000
+      : userData.creationTime;
     userData.id = user.id;
 
     const avatarFile = storage.bucket().file(`users/${user.id}/avatar.png`);
@@ -54,8 +62,6 @@ export const getServerSideProps = withAuthUserSSR({
 
       avatar = signedUrl[0];
     }
-
-    console.log(avatar);
 
     return {
       props: {

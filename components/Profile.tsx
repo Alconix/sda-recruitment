@@ -67,6 +67,22 @@ const Profile = ({ user, avatar }) => {
     }
   };
 
+  const handleSubmit = async (values) => {
+    try {
+      await firebase.firestore().collection("users").doc(user.id).update({
+        pseudo: values.pseudo,
+      });
+
+      const currentUser = firebase.auth().currentUser;
+      await currentUser.updateProfile({ displayName: values.pseudo });
+
+      message.success("Modification effectuée");
+    } catch (err) {
+      console.log(err);
+      message.error("Une erreur est survenue lors de la modification.");
+    }
+  };
+
   const uploadButton = (
     <div>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
@@ -79,13 +95,13 @@ const Profile = ({ user, avatar }) => {
       <Typography.Title level={2}>Mon profil</Typography.Title>
       <p>Role : {role}</p>
       <p>Inscription : {timestampToString(user.creationTime)}</p>
-      <Form initialValues={{ pseudo: user.pseudo }}>
+      <Form initialValues={{ pseudo: user.pseudo }} onFinish={handleSubmit}>
         Pseudo
         <Form.Item
           name="pseudo"
           labelCol={{ span: 24 }}
           hasFeedback
-          rules={[{ required: true, message: "Veuillez entrer votre mot de passe !" }]}
+          rules={[{ required: true, message: "Veuillez entrer un pseudo !" }]}
         >
           <Input />
         </Form.Item>
@@ -101,10 +117,12 @@ const Profile = ({ user, avatar }) => {
         >
           {imgUrl ? <img src={imgUrl} alt="avatar" style={{ width: "100%" }} /> : uploadButton}
         </Upload>
+        <p style={{ marginTop: "2rem" }}>
+          <Button type="primary" htmlType="submit">
+            Valider
+          </Button>
+        </p>
       </Form>
-      <p style={{ marginTop: "2rem" }}>
-        <Button type="primary">Valider</Button>
-      </p>
     </>
   );
 };

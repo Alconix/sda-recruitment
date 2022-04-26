@@ -54,8 +54,17 @@ const CommentCreator = ({ user, setComments, applyId }) => {
     }
   };
 
+  const avatar = user.pp === "NA" ? (
+    <Avatar style={{ backgroundColor: generateHSL(user.pseudo) }}>
+      {getAvatarFromName(user.pseudo)}
+    </Avatar>
+  ) : (
+    <Avatar src={user.pp} alt={user.pseudo} />
+  );
+
   return (
     <Comment
+    avatar={avatar}
       content={
         <Form form={form} onFinish={(values) => onSubmit(values)}>
           <Form.Item

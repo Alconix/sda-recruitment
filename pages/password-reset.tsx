@@ -1,11 +1,9 @@
 import React from "react";
-import { Row, Tabs } from "antd";
+import { Row } from "antd";
 
 import Password from "../components/Password";
 import Layout from "../components/Layout";
 import { Paper } from "../components/Layout.styles";
-
-const { TabPane } = Tabs;
 
 const PasswordPage = () => {
   return (

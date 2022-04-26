@@ -106,7 +106,7 @@ const ApplyCreation = ({ user, edit, apply }) => {
   const router = useRouter();
   const [form] = Form.useForm();
 
-  const [showGuilds, setShowGuilds] = useState<string | undefined>();
+  const [showGuilds, setShowGuilds] = useState(edit ? apply[6] === "yes" : false);
 
   const defaultValues = edit
     ? {
@@ -268,12 +268,12 @@ const ApplyCreation = ({ user, edit, apply }) => {
         hasFeedback
         rules={[{ required: true, message: "Veuillez entrer une réponse !" }]}
       >
-        <Radio.Group onChange={(event: any) => setShowGuilds(event.target.value)}>
+        <Radio.Group onChange={(event: any) => setShowGuilds(event.target.value === "yes")}>
           <Radio value="yes">Oui</Radio>
           <Radio value="no">Non</Radio>
         </Radio.Group>
       </Form.Item>
-      {showGuilds && showGuilds === "yes" && (
+      {showGuilds && (
         <>
           <Question>Indiquez le nom des guildes</Question>
           <Form.Item

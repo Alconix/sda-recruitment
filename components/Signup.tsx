@@ -36,7 +36,7 @@ const Signup = () => {
     const user = firebase.auth().currentUser;
     await user.updateProfile({ displayName: values.pseudo });
 
-    await firebase.firestore().collection("users").add({
+    await firebase.firestore().collection("users").doc(user.uid).set({
       creationTime: new Date(),
       lastSignInTime: new Date(),
       pseudo: values.pseudo,

@@ -6,6 +6,7 @@ import Layout from "../components/Layout";
 import Home from "../components/Home";
 import { Paper } from "../components/Layout.styles";
 import { db } from "../firebase/admin";
+import { timestampToString } from "../utils/time";
 
 type HomeDataType = {
   user: any;
@@ -35,9 +36,17 @@ export const getServerSideProps = withAuthUserSSR()(async ({ AuthUser, req }) =>
   try {
     const user = await db.collection("users").doc(AuthUser.id).get();
 
+    const userData = user.data();
+    userData.lastSignInTime = userData.lastSignInTime.seconds
+      ? userData.lastSignInTime.seconds * 1000
+      : userData.lastSignInTime;
+    userData.creationTime = userData.creationTime.seconds
+      ? userData.creationTime.seconds * 1000
+      : userData.creationTime;
+
     return {
       props: {
-        user: user.data(),
+        user: userData,
       },
     };
   } catch (err) {

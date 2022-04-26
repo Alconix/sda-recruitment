@@ -9,6 +9,7 @@ import Layout from "../../components/Layout";
 import ApplyContent from "../../components/ApplyContent";
 import { Paper } from "../../components/Layout.styles";
 import { canVote } from "../../utils/permissions";
+import { timestampToString } from "../../utils/time";
 
 type ApplyDataType = {
   isMember: boolean;
@@ -94,10 +95,28 @@ export const getServerSideProps = withAuthUserTokenSSR({
 
     const rio = await rioReq.json();
 
-    const myAvatarValid = await isAvatarValid(user.data().img);
     const userData = user.data();
-    userData.pp = myAvatarValid ? user.data().img : "NA";
     userData.uid = AuthUser.id;
+
+    const avatarFile = storage.bucket().file(`users/${userData.uid}/avatar.png`);
+    const avExists = await avatarFile.exists();
+
+    userData.pp = "NA";
+    if (avExists[0]) {
+      const signedUrl = await avatarFile.getSignedUrl({
+        action: "read",
+        expires: new Date().setHours(new Date().getHours() + 24),
+      });
+
+      userData.pp = signedUrl[0];
+    }
+
+    userData.lastSignInTime = userData.lastSignInTime.seconds
+      ? userData.lastSignInTime.seconds * 1000
+      : userData.lastSignInTime;
+    userData.creationTime = userData.creationTime.seconds
+      ? userData.creationTime.seconds * 1000
+      : userData.creationTime;
 
     const apply: { [k: string]: any } = {
       name: author.data().pseudo,

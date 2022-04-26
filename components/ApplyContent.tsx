@@ -14,6 +14,7 @@ import {
   Select,
   Empty,
   Modal,
+  message,
 } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
@@ -62,6 +63,7 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
   const [comments, setComments] = useState(data.comments);
   const [votes, setVotes] = useState(data.votes);
   const [showModal, setShowModal] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
   const [score, setScore] = useState(
     data.votes.reduce((acc, val) => acc + (val.value === 1 ? 1 : 0), 0)
   );
@@ -97,10 +99,13 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
 
   const onDelete = async () => {
     try {
+      setLoadingDelete(true);
       await db.collection("appli").doc(router.query.id.toString()).delete();
       // await sendLogNotification(user.pseudo, apply.name, "delete")
-      router.push("/");
+      router.push("/applies");
     } catch (err) {
+      setLoadingDelete(false);
+      message.error("Une erreur est survenue lors de la suppression.");
       console.log(err);
     }
   };
@@ -138,18 +143,23 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
   };
 
   const onStatusChange = async (change) => {
-    await db.collection("appli").doc(router.query.id.toString()).update({
-      state: change,
-    });
+    try {
+      await db.collection("appli").doc(router.query.id.toString()).update({
+        state: change,
+      });
 
-    // await sendLogNotification(user, apply.name, change);
+      // await sendLogNotification(user, apply.name, change);
+    } catch (err) {
+      console.log(err);
+      message.error("Une erreur est survenue lors de la modification.");
+    }
   };
 
   return (
     <>
       <DateContent>
         <p>Posté le : {creationDate}</p>
-        <p className="last">Dernière édition : {editDate}</p>
+        {editDate && <p className="last">Dernière édition : {editDate}</p>}
       </DateContent>
       <Content>
         <Typography.Title level={4}>Nom du personnage</Typography.Title>
@@ -160,7 +170,7 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
         <p>{ReactHtmlParser(sanitizeHtml(data.content[2]))}</p>
         <Typography.Title level={4}>Quelles sont vos anciennes guildes ?</Typography.Title>
         <p>{ReactHtmlParser(sanitizeHtml(data.content[3]))}</p>
-        <Typography.Title level={4}>Présentez vous ?</Typography.Title>
+        <Typography.Title level={4}>Présentez vous</Typography.Title>
         <p>{ReactHtmlParser(sanitizeHtml(data.content[4]))}</p>
         <Typography.Title level={4}>Présentez votre personnage</Typography.Title>
         <p>{ReactHtmlParser(sanitizeHtml(data.content[5]))}</p>
@@ -168,7 +178,7 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
           Avez vous des personnages dans d'autres guildes ?
         </Typography.Title>
         <p>{data.content[6] === "yes" ? "Oui" : "Non"}</p>
-        {data.content[6] === "Oui" && (
+        {data.content[6] === "yes" && (
           <>
             <Typography.Title level={4}>Indiquez le nom des guildes</Typography.Title>
             <p>{data.content[7]}</p>
@@ -310,7 +320,7 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
         visible={showModal}
         onOk={onDelete}
         onCancel={() => setShowModal(false)}
-        okButtonProps={{ danger: true }}
+        okButtonProps={{ danger: true, loading: loadingDelete }}
         okText="Supprimer"
       >
         Voulez-vous vraiment supprimer cette candidature ?<br />

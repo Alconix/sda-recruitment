@@ -7,6 +7,7 @@ import Layout from "../../../components/Layout";
 import { Paper } from "../../../components/Layout.styles";
 import ApplyCreation from "../../../components/ApplyCreation";
 import { canEdit } from "../../../utils/permissions";
+import { timestampToString } from "../../../utils/time";
 
 type EditDataType = {
   user: any;
@@ -34,6 +35,12 @@ export const getServerSideProps = withAuthUserTokenSSR({
     const user = await db.collection("users").doc(AuthUser.id).get();
     const userData = user.data();
     userData.uid = AuthUser.id;
+    userData.lastSignInTime = userData.lastSignInTime.seconds
+      ? userData.lastSignInTime.seconds * 1000
+      : userData.lastSignInTime;
+    userData.creationTime = userData.creationTime.seconds
+      ? userData.creationTime.seconds * 1000
+      : userData.creationTime;
 
     const applyId = req.url.match(/apply\/([^\/|.]+)/)[1];
 

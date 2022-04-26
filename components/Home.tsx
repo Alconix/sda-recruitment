@@ -91,7 +91,7 @@ const Home = () => {
         Progress
       </Title>
       <Timeline style={{ marginTop: "3rem" }}>
-        <Timeline.Item color="grey">Sépulcre des fondateur : 7/11 Héroïque</Timeline.Item>
+        <Timeline.Item color="grey">Sépulcre des fondateur : 8/11 Héroïque</Timeline.Item>
         <Timeline.Item color="grey">Sanctum de Domination : 10/10 Héroïque</Timeline.Item>
         <Timeline.Item color="grey">Château Nathria : 10/10 Héroïque</Timeline.Item>
         <Timeline.Item color="blue">Ny'alotha : 12/12 Héroïque</Timeline.Item>

@@ -7,6 +7,7 @@ import { Paper } from "../components/Layout.styles";
 import UserTable from "../components/UserTable";
 import { db } from "../firebase/admin";
 import { canVote } from "../utils/permissions";
+import { timestampToString } from "../utils/time";
 
 type UsersDataType = {
   user: any;
@@ -46,6 +47,12 @@ export const getServerSideProps = withAuthUserTokenSSR({
     for (const u of users.docs) {
       const data = u.data();
       data.id = u.id;
+      data.lastSignInTime = data.lastSignInTime.seconds
+        ? data.lastSignInTime.seconds * 1000
+        : data.lastSignInTime;
+      data.creationTime = data.creationTime.seconds
+        ? data.creationTime.seconds * 1000
+        : data.creationTime;
       userList.push(data);
     }
 
