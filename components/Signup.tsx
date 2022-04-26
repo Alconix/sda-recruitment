@@ -36,6 +36,13 @@ const Signup = () => {
     const user = firebase.auth().currentUser;
     await user.updateProfile({ displayName: values.pseudo });
 
+    await firebase.firestore().collection("users").add({
+      creationTime: new Date(),
+      lastSignInTime: new Date(),
+      pseudo: values.pseudo,
+      role: "apply",
+    });
+
     redirectUser(router.query.from);
   };
 
@@ -43,31 +50,31 @@ const Signup = () => {
     <StyledForm onFinish={handleSubmit}>
       <Form.Item
         hasFeedback
-        name='pseudo'
+        name="pseudo"
         rules={[{ required: true, message: "Veuillez entrer votre pseudo !" }]}
       >
-        <Input prefix={<UserOutlined style={iconStyle} />} placeholder='Pseudo' />
+        <Input prefix={<UserOutlined style={iconStyle} />} placeholder="Pseudo" />
       </Form.Item>
       <Form.Item
         hasFeedback
-        name='email'
+        name="email"
         rules={[
           { type: "email", message: "Veuillez entrer un email valide !" },
           { required: true, message: "Veuillez entrer votre email !" },
         ]}
       >
-        <Input prefix={<MailOutlined style={iconStyle} />} placeholder='Email' />
+        <Input prefix={<MailOutlined style={iconStyle} />} placeholder="Email" />
       </Form.Item>
       <Form.Item
         hasFeedback
-        name='password'
+        name="password"
         rules={[{ required: true, message: "Veuillez entrer votre mot de passe !" }]}
       >
-        <Input.Password prefix={<LockOutlined style={iconStyle} />} placeholder='Mot de passe' />
+        <Input.Password prefix={<LockOutlined style={iconStyle} />} placeholder="Mot de passe" />
       </Form.Item>
       <Form.Item
         hasFeedback
-        name='cpassword'
+        name="cpassword"
         rules={[
           { required: true, message: "Veuillez confirmer votre mot de passe !" },
           ({ getFieldValue }) => ({
@@ -82,10 +89,10 @@ const Signup = () => {
       >
         <Input.Password
           prefix={<LockOutlined style={iconStyle} />}
-          placeholder='Confirmer le mot de passe'
+          placeholder="Confirmer le mot de passe"
         />
       </Form.Item>
-      <Button type='primary' htmlType='submit' block style={{ marginTop: "2rem" }}>
+      <Button type="primary" htmlType="submit" block style={{ marginTop: "2rem" }}>
         Valider
       </Button>
     </StyledForm>
