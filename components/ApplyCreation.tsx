@@ -307,7 +307,7 @@ const ApplyCreation = ({ user, edit, apply, author }) => {
       >
         <Input />
       </Form.Item>
-      <Row gutter={8} style={{ paddingBottom: "4rem" }}>
+      <Row gutter={8}>
         <Col>
           <SendButton type="primary" htmlType="submit">
             Envoyer

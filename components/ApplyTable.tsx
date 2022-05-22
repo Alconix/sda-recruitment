@@ -4,8 +4,6 @@ import styled from "styled-components";
 import { useRouter } from "next/router";
 
 const StyledTable = styled(Table)`
-  padding-bottom: 4rem;
-
   .apply-row {
     cursor: pointer;
   }

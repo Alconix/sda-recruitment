@@ -38,6 +38,7 @@ const initAuth = () => {
           "localhost:3000",
           "secretdesanciens.fr",
           "sda-recruitment.vercel.app",
+          "beta.secretdesanciens.fr",
         ];
         const allowed = allowedHosts.includes(new URL(destinationParamVal).host);
         if (allowed) destUrl = destinationParamVal;

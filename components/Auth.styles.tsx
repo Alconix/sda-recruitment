@@ -5,7 +5,7 @@ import { Tabs, Form } from "antd";
 export const Container = styled.div`
   flex: 1;
   margin: ${(props) => (props.mobile ? "1rem" : "0")};
-  margin-bottom: ${(props) => (props.mobile ? "3rem" : "0")};
+  padding-bottom: ${(props) => (props.mobile ? "3rem" : "0")};
 `;
 
 export const Background = styled.div`

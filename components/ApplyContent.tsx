@@ -191,7 +191,7 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
         {rio.name != null && (
           <ScoreRow gutter={16} className="scores">
             {rio.mythic_plus_scores_by_season != null && (
-              <Col span={6}>
+              <Col>
                 <Statistic
                   title="M+"
                   value={rio.mythic_plus_scores_by_season[0].scores.all}
@@ -200,7 +200,7 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
               </Col>
             )}
             {rio.raid_progression != null && (
-              <Col span={6}>
+              <Col>
                 <Statistic
                   title="Raid"
                   value={rio.raid_progression["sepulcher-of-the-first-ones"].summary}

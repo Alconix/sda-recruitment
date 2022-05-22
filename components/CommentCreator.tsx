@@ -67,7 +67,6 @@ const CommentCreator = ({ user, setComments, applyId }) => {
 
   return (
     <Comment
-      style={{ paddingBottom: "4rem" }}
       avatar={avatar}
       content={
         <Form form={form} onFinish={(values) => onSubmit(values)}>
