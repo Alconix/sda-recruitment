@@ -2,22 +2,23 @@ import React, { useState } from "react";
 import sanitizeHtml from "sanitize-html";
 import ReactHtmlParser from "react-html-parser";
 import styled from "styled-components";
+
 import {
+  Button,
+  Col,
+  Row,
+  Progress,
+  notification,
   Typography,
   Divider,
   Statistic,
-  Row,
-  Col,
-  Button,
-  Progress,
-  notification,
   Select,
   Empty,
   Modal,
   message,
 } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
+import { EditOutlined, DeleteOutlined } from "../utils/icons";
 import CommentSection from "./CommentSection";
 import CommentCreator from "./CommentCreator";
 import { timestampToString } from "../utils/time";
@@ -67,7 +68,6 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
   const [score, setScore] = useState(
     data.votes.reduce((acc, val) => acc + (val.value === 1 ? 1 : 0), 0)
   );
-  const [status, setStatus] = useState(data.status);
 
   const router = useRouter();
 
@@ -100,8 +100,8 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
   const onDelete = async () => {
     try {
       setLoadingDelete(true);
-      await db.collection("appli").doc(router.query.id.toString()).delete();
-      // await sendLogNotification(user.pseudo, apply.name, "delete")
+      await db.collection("applies").doc(router.query.id.toString()).delete();
+      await sendLogNotification(user.pseudo, data.name, "delete");
       router.push("/applies");
     } catch (err) {
       setLoadingDelete(false);
@@ -115,7 +115,7 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
 
     try {
       const voteRef = db
-        .collection("appli")
+        .collection("applies")
         .doc(router.query.id.toString())
         .collection("votes")
         .doc(user.uid);
@@ -144,11 +144,11 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
 
   const onStatusChange = async (change) => {
     try {
-      await db.collection("appli").doc(router.query.id.toString()).update({
+      await db.collection("applies").doc(router.query.id.toString()).update({
         state: change,
       });
 
-      // await sendLogNotification(user, apply.name, change);
+      await sendLogNotification(user, data.name, change);
     } catch (err) {
       console.log(err);
       message.error("Une erreur est survenue lors de la modification.");
@@ -191,7 +191,7 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
         {rio.name != null && (
           <ScoreRow gutter={16} className="scores">
             {rio.mythic_plus_scores_by_season != null && (
-              <Col span={4}>
+              <Col span={6}>
                 <Statistic
                   title="M+"
                   value={rio.mythic_plus_scores_by_season[0].scores.all}
@@ -200,7 +200,7 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
               </Col>
             )}
             {rio.raid_progression != null && (
-              <Col span={4}>
+              <Col span={6}>
                 <Statistic
                   title="Raid"
                   value={rio.raid_progression["sepulcher-of-the-first-ones"].summary}
@@ -292,7 +292,11 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
             </Col>
             {canModerate(user.role) && (
               <Col>
-                <Select defaultValue={status} onChange={onStatusChange} style={{ width: "8rem" }}>
+                <Select
+                  defaultValue={data.status}
+                  onChange={onStatusChange}
+                  style={{ width: "8rem" }}
+                >
                   <Option value="pending">En attente</Option>
                   <Option value="test">En test</Option>
                   <Option value="reject">Refusé</Option>

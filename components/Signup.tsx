@@ -1,13 +1,11 @@
 import React from "react";
-
 import { useRouter } from "next/router";
 
-import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
 import { Form, Input, Button } from "antd";
 
 import firebase from "../firebase";
-
 import { StyledForm } from "./Auth.styles";
+import { LockOutlined, MailOutlined, UserOutlined } from "../utils/icons";
 
 const iconStyle = { color: "rgb(133, 133, 133)" };
 

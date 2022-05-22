@@ -1,12 +1,10 @@
 import React, { VFC } from "react";
 import { withAuthUserSSR, withAuthUser, AuthAction } from "next-firebase-auth";
-import { Row } from "antd";
+import Head from "next/head";
 
 import Layout from "../components/Layout";
-import { Paper } from "../components/Layout.styles";
 import Profile from "../components/Profile";
 import { db, storage } from "../firebase/admin";
-import { timestampToString } from "../utils/time";
 
 type ProfileDataType = {
   user: any;
@@ -15,13 +13,14 @@ type ProfileDataType = {
 
 const ProfilePage: VFC<ProfileDataType> = ({ user, avatar }) => {
   return (
-    <Layout sidebar user={user}>
-      <Row justify="center" align="middle">
-        <Paper>
-          <Profile user={user} avatar={avatar} />
-        </Paper>
-      </Row>
-    </Layout>
+    <>
+      <Head>
+        <title>Mon profil | Secret des Anciens</title>
+      </Head>
+      <Layout sidebar user={user}>
+        <Profile user={user} avatar={avatar} />
+      </Layout>
+    </>
   );
 };
 

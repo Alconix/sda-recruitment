@@ -29,6 +29,7 @@ const columns = [
     width: 200,
     align: "center",
     dataIndex: "date",
+    responsive: ["md"],
     sorter: (a, b) => a.date - b.date,
     render: (elt) => {
       const date = new Date(elt);
@@ -53,6 +54,7 @@ const columns = [
     dataIndex: "votes",
     className: "score-column",
     align: "center",
+    responsive: ["lg"],
     render: (data) => {
       const percentage = Math.floor((data.score / data.size) * 100);
       return (
@@ -149,6 +151,11 @@ const ApplyTable = ({ data }) => {
         };
       }}
       rowClassName="apply-row"
+      pagination={{
+        defaultPageSize: 10,
+        showSizeChanger: true,
+        pageSizeOptions: ["10", "15", "20", "30", "50"],
+      }}
     />
   );
 };

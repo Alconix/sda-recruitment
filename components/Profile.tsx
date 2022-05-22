@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Typography, Form, Input, Button, Row, Col, Upload, message } from "antd";
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+import { Typography, Form, Input, Button, Upload, message } from "antd";
 
+import { LoadingOutlined, PlusOutlined } from "../utils/icons";
 import { timestampToString } from "../utils/time";
 import firebase from "../firebase";
 

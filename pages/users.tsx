@@ -1,13 +1,11 @@
 import React, { VFC } from "react";
-import { Row, Typography } from "antd";
 import { AuthAction, withAuthUser, withAuthUserTokenSSR } from "next-firebase-auth";
+import Head from "next/head";
 
 import Layout from "../components/Layout";
-import { Paper } from "../components/Layout.styles";
 import UserTable from "../components/UserTable";
 import { db } from "../firebase/admin";
 import { canVote } from "../utils/permissions";
-import { timestampToString } from "../utils/time";
 
 type UsersDataType = {
   user: any;
@@ -16,13 +14,14 @@ type UsersDataType = {
 
 const UsersPage: VFC<UsersDataType> = ({ user, users }) => {
   return (
-    <Layout sidebar user={user}>
-      <Row justify="center" align="middle" style={{ height: "100vh" }}>
-        <Paper>
-          <UserTable user={user} users={users} />
-        </Paper>
-      </Row>
-    </Layout>
+    <>
+      <Head>
+        <title>Membres | Secret des Anciens</title>
+      </Head>
+      <Layout sidebar user={user}>
+        <UserTable user={user} users={users} />
+      </Layout>
+    </>
   );
 };
 

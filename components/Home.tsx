@@ -1,14 +1,7 @@
 import React from "react";
-import { Anchor, Affix, Timeline, Carousel, Typography, BackTop, Button } from "antd";
-import { useRouter } from "next/router";
 
-const contentStyle: any = {
-  height: "160px",
-  color: "#fff",
-  lineHeight: "160px",
-  textAlign: "center",
-  background: "#364d79",
-};
+import { Button, BackTop, Typography, Carousel, Timeline, Image } from "antd";
+import { useRouter } from "next/router";
 
 const { Title } = Typography;
 
@@ -18,21 +11,9 @@ const Home = () => {
   return (
     <>
       <BackTop />
-      <Carousel>
+      <Carousel arrows>
         <div>
-          <h3 style={contentStyle}>PIC1</h3>
-        </div>
-        <div>
-          <h3 style={contentStyle}>PIC2</h3>
-        </div>
-        <div>
-          <h3 style={contentStyle}>PIC3</h3>
-        </div>
-        <div>
-          <h3 style={contentStyle}>PIC4</h3>
-        </div>
-        <div>
-          <h3 style={contentStyle}>PIC5</h3>
+          <Image src="/denat1.jpg" />
         </div>
       </Carousel>
       <Title level={2} id="presentation" style={{ marginTop: "2rem" }}>
@@ -62,8 +43,8 @@ const Home = () => {
           <li>Les membres de la guilde posent leur questions / reactions sur votre candidature.</li>
           <li>
             Si votre candidature est convaincante, vous êtes invité pour une période de test d'une
-            durée d'un mois pour s'assurer que vous convenez à la guilde mais aussi que la guilde
-            vous convient.
+            durée d'un mois pour s'assurer de votre engagement et que le courant passe avec le reste
+            de la guilde.
           </li>
           <li>
             Si vous passez cette période de test, félicitation vous faites officiellement partie de
@@ -80,7 +61,7 @@ const Home = () => {
       </Title>
       <p>
         En cas de question ou de problème, n'hésitez pas à rejoindre le{" "}
-        <a href="https://discord.gg/RbcbBsD" target="_blank" rel="noopener noreferer">
+        <a href="https://discord.gg/RbcbBsD" target="_blank" rel="noopener noreferrer">
           discord
         </a>{" "}
         de la guilde pour en faire part ou à contacter en privé un officier (Haut Conseiller ou
@@ -91,7 +72,7 @@ const Home = () => {
         Progress
       </Title>
       <Timeline style={{ marginTop: "3rem" }}>
-        <Timeline.Item color="grey">Sépulcre des fondateur : 8/11 Héroïque</Timeline.Item>
+        <Timeline.Item color="grey">Sépulcre des fondateurs : 10/11 Héroïque</Timeline.Item>
         <Timeline.Item color="grey">Sanctum de Domination : 10/10 Héroïque</Timeline.Item>
         <Timeline.Item color="grey">Château Nathria : 10/10 Héroïque</Timeline.Item>
         <Timeline.Item color="blue">Ny'alotha : 12/12 Héroïque</Timeline.Item>

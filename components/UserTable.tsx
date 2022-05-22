@@ -1,10 +1,11 @@
-import React from "react";
-import { Typography, Table, notification, Tooltip, Select } from "antd";
+import React, { useState } from "react";
 import styled from "styled-components";
+import { Typography, Table, notification, Tooltip, Select, Input, Space, Button } from "antd";
 
 import firebase from "../firebase";
 import { timeSince, timestampToString } from "../utils/time";
 import { canModerate } from "../utils/permissions";
+import { SearchOutlined } from "../utils/icons";
 
 const db = firebase.firestore();
 const { Option } = Select;
@@ -30,6 +31,72 @@ const notificationFailure = () => {
 };
 
 const UserTable = ({ user, users }) => {
+  const [searchName, setSearchName] = useState<any>("");
+  let searchInput = undefined;
+
+  const getColumnSearchNameProps = () => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={(node) => {
+            searchInput = node;
+          }}
+          placeholder="Pseudo à rechercher"
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm)}
+          style={{ marginBottom: 8, display: "block" }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: "8rem" }}
+          >
+            Rechercher
+          </Button>
+          <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: "4rem" }}>
+            Reset
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              confirm({ closeDropdown: false });
+              setSearchName(selectedKeys[0]);
+            }}
+          >
+            Filter
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record["pseudo"]
+        ? record["pseudo"].toString().toLowerCase().includes(value.toLowerCase())
+        : "",
+    onFilterDropdownVisibleChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.select(), 100);
+      }
+    },
+  });
+
+  const handleSearch = (selectedKeys, confirm) => {
+    confirm();
+    setSearchName(selectedKeys[0]);
+  };
+
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchName("");
+  };
+
   const onRoleChange = async (value, user) => {
     try {
       await db.collection("users").doc(user.id).update({
@@ -52,11 +119,13 @@ const UserTable = ({ user, users }) => {
         else if (a.pseudo > b.pseudo) return 1;
         else return 0;
       },
+      ...getColumnSearchNameProps(),
     },
     {
       title: "Inscription",
       width: 300,
       dataIndex: "creationTime",
+      responsive: ["md"],
       sorter: (a, b) => new Date(b.creationTime).getTime() - new Date(a.creationTime).getTime(),
       render: (elt) => (
         <Tooltip title={timestampToString(elt)}>
@@ -102,7 +171,7 @@ const UserTable = ({ user, users }) => {
 
   return (
     <>
-      <Typography.Title level={3}>Utilisateurs</Typography.Title>
+      <Typography.Title level={2}>Utilisateurs</Typography.Title>
       <StyledTable dataSource={users} columns={columns} rowClassName="user-row" />
     </>
   );

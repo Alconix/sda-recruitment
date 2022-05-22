@@ -4,6 +4,8 @@ import { Tabs, Form } from "antd";
 
 export const Container = styled.div`
   flex: 1;
+  margin: ${(props) => (props.mobile ? "1rem" : "0")};
+  margin-bottom: ${(props) => (props.mobile ? "3rem" : "0")};
 `;
 
 export const Background = styled.div`
@@ -24,7 +26,7 @@ export const Background = styled.div`
 `;
 
 export const Paper = styled(Tabs)`
-  padding-left: 15px;
+  padding: 1rem;
   background-color: white;
 
   position: relative;
@@ -59,6 +61,8 @@ export const Paper = styled(Tabs)`
 `;
 
 export const StyledForm = styled(Form)`
-  width: 20rem;
-  height: 18rem;
+  @media screen and (min-width: 768px) {
+    width: 20rem;
+    height: 18rem;
+  }
 `;

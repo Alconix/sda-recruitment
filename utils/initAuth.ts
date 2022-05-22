@@ -5,7 +5,7 @@ const TWELVE_DAYS_IN_MS = 12 * 60 * 60 * 24 * 1000;
 
 const initAuth = () => {
   init({
-    debug: false, // # TODO : CHANGE FALSE
+    debug: false,
     // authPageURL: "/auth",
     authPageURL: ({ ctx }) => {
       const isServerSide = typeof window === "undefined";

@@ -1,12 +1,10 @@
 import React, { VFC } from "react";
-import { Row } from "antd";
-import { withAuthUserSSR, withAuthUser, AuthAction } from "next-firebase-auth";
+import Head from "next/head";
+import { withAuthUserSSR, withAuthUser } from "next-firebase-auth";
 
 import Layout from "../components/Layout";
 import Home from "../components/Home";
-import { Paper } from "../components/Layout.styles";
 import { db } from "../firebase/admin";
-import { timestampToString } from "../utils/time";
 
 type HomeDataType = {
   user: any;
@@ -14,13 +12,14 @@ type HomeDataType = {
 
 const HomePage: VFC<HomeDataType> = ({ user }) => {
   return (
-    <Layout sidebar user={user}>
-      <Row justify="center" align="middle">
-        <Paper>
-          <Home />
-        </Paper>
-      </Row>
-    </Layout>
+    <>
+      <Head>
+        <title>Secret des Anciens</title>
+      </Head>
+      <Layout sidebar user={user}>
+        <Home />
+      </Layout>
+    </>
   );
 };
 
@@ -28,7 +27,7 @@ export const getServerSideProps = withAuthUserSSR()(async ({ AuthUser, req }) =>
   if (AuthUser.id === null) {
     return {
       props: {
-        user: undefined,
+        user: null,
       },
     };
   }
@@ -37,6 +36,7 @@ export const getServerSideProps = withAuthUserSSR()(async ({ AuthUser, req }) =>
     const user = await db.collection("users").doc(AuthUser.id).get();
 
     const userData = user.data();
+
     userData.lastSignInTime = userData.lastSignInTime.seconds
       ? userData.lastSignInTime.seconds * 1000
       : userData.lastSignInTime;

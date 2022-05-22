@@ -1,13 +1,12 @@
 import React, { VFC } from "react";
-import { Row, Typography } from "antd";
+import { Typography } from "antd";
+import Head from "next/head";
 import { withAuthUser, withAuthUserTokenSSR, AuthAction } from "next-firebase-auth";
 
 import { db } from "../../../firebase/admin";
 import Layout from "../../../components/Layout";
-import { Paper } from "../../../components/Layout.styles";
 import ApplyCreation from "../../../components/ApplyCreation";
 import { canEdit } from "../../../utils/permissions";
-import { timestampToString } from "../../../utils/time";
 
 type EditDataType = {
   user: any;
@@ -17,14 +16,15 @@ type EditDataType = {
 
 const EditApply: VFC<EditDataType> = ({ user, apply, author }) => {
   return (
-    <Layout sidebar user={user}>
-      <Row justify="center" align="middle" style={{ height: "100%" }}>
-        <Paper>
-          <Typography.Title level={2}>Modification candidature de {author}</Typography.Title>
-          <ApplyCreation user={user} edit apply={apply} />
-        </Paper>
-      </Row>
-    </Layout>
+    <>
+      <Head>
+        <title>Modifier une cadidature | Secret des Anciens</title>
+      </Head>
+      <Layout sidebar user={user}>
+        <Typography.Title level={2}>Modification candidature de {author}</Typography.Title>
+        <ApplyCreation user={user} edit apply={apply} author={author} />
+      </Layout>
+    </>
   );
 };
 
@@ -44,7 +44,7 @@ export const getServerSideProps = withAuthUserTokenSSR({
 
     const applyId = req.url.match(/apply\/([^\/|.]+)/)[1];
 
-    const apply = await db.collection("appli").doc(applyId).get();
+    const apply = await db.collection("applies").doc(applyId).get();
     const author = await db.collection("users").doc(apply.data().author_id).get();
 
     const allowed = canEdit(user.data().role, apply.data().author_id, userData.uid);

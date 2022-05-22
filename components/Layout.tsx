@@ -1,8 +1,11 @@
 import React from "react";
-import { Container } from "../components/Auth.styles";
 import styled from "styled-components";
+import { Row } from "antd";
 
+import { Paper } from "./Layout.styles";
+import { Container } from "./Auth.styles";
 import Sidebar from "./Sidebar";
+import Device from "./Device";
 
 const Footer = styled.footer`
   color: white;
@@ -14,37 +17,93 @@ const Footer = styled.footer`
   margin-bottom: 5px;
   padding-right: 50px;
   flex-shrink: 0;
+
+  a,
+  a:hover,
+  a:focus,
+  a:active {
+    color: inherit;
+    text-decoration: none;
+  }
+`;
+
+const Background = styled.div`
+  background-image: url(/background-df.png);
+  background-size: cover;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-position: 82% 10%;
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 `;
 
 type PropsType = {
   children: any;
   user?: any;
+  auth?: boolean;
   sidebar?: boolean;
 };
 
-const Layout = ({ children, user, sidebar = false, ...props }: PropsType) => {
-  return (
-    <div
-      style={{
-        backgroundImage: "url(/background-df.png)",
-        backgroundSize: "cover",
-        backgroundAttachment: "fixed",
-        backgroundRepeat: "no-repeat",
-        //backgroundPosition: "center",
-        top: 0,
-        left: 10,
-        bottom: 0,
-        overflowX: "hidden",
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <Sidebar show={sidebar} user={user} />
-      <Container>{children}</Container>
-      <Footer>© 2019 - 2022 Secret des Anciens</Footer>
-    </div>
-  );
-};
+const Layout = ({ auth, children, user, sidebar = false, ...props }: PropsType) => (
+  <Device>
+    {({ isMobile }) => {
+      if (isMobile) {
+        if (auth) {
+          return (
+            <Background mobile>
+              <Container mobile>{children}</Container>
+              <Sidebar show={sidebar} user={user} />
+            </Background>
+          );
+        } else {
+          return (
+            <>
+              <Container mobile>{children}</Container>
+              <Sidebar show={sidebar} user={user} />
+            </>
+          );
+        }
+      } else {
+        return (
+          <Background>
+            <Sidebar show={sidebar} user={user} />
+            <Container>
+              {auth ? (
+                <Row justify="center" align="middle">
+                  {children}
+                </Row>
+              ) : (
+                <Row justify="center" align="middle">
+                  <Paper>{children}</Paper>
+                </Row>
+              )}
+            </Container>
+            <Footer>
+              © 2019 - 2022 Secret des Anciens
+              <br />
+              <a
+                href="https://raider.io/guilds/eu/voljin/Secret%20des%20Anciens"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Raider.IO
+              </a>{" "}
+              -{" "}
+              <a
+                href="https://www.warcraftlogs.com/guild/eu/voljin/Secret%20des%20Anciens"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Warcraftlogs
+              </a>{" "}
+            </Footer>
+          </Background>
+        );
+      }
+    }}
+  </Device>
+);
 
 export default Layout;

@@ -2,21 +2,24 @@ import React from "react";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import { Menu } from "antd";
-import Icon, {
+import Icon from "@ant-design/icons";
+
+import {
   UserOutlined,
   HomeOutlined,
   SettingOutlined,
   LogoutOutlined,
   TeamOutlined,
   ContainerOutlined,
-} from "@ant-design/icons";
+} from "../utils/icons";
 
 import firebase from "../firebase";
 import { canVote } from "../utils/permissions";
+import Device from "./Device";
 
 const { Item, SubMenu } = Menu;
 
-const StyledMenu = styled(Menu).attrs(() => ({
+const DesktopMenu = styled(Menu).attrs(() => ({
   theme: "dark",
 }))`
   position: fixed;
@@ -29,6 +32,26 @@ const StyledMenu = styled(Menu).attrs(() => ({
   display: flex;
   flex-direction: column;
   justify-content: center;
+`;
+
+const MobileMenu = styled(Menu).attrs(() => ({
+  theme: "dark",
+}))`
+  position: fixed;
+  margin-top: 1rem;
+  width: 100%;
+  bottom: 0;
+  z-index: 2;
+  height: 3rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+
+  .ant-menu-title-content {
+    margin-left: 0 !important;
+  }
 `;
 
 const DiscordSvg = () => (
@@ -47,12 +70,54 @@ const Sidebar = ({ user, show = false }) => {
 
   const handleDisconnect = async () => {
     await firebase.auth().signOut();
+    router.reload();
   };
+
+  const items: any[] = [
+    { label: null, key: "home", icon: <HomeOutlined />, onClick: () => router.push("/home") },
+  ];
+
+  if (canVote(user?.role)) {
+    items.push({
+      label: "",
+      key: "applies",
+      icon: <ContainerOutlined />,
+      onClick: () => router.push("/applies"),
+    });
+
+    items.push({
+      label: "",
+      key: "members",
+      icon: <TeamOutlined />,
+      onClick: () => router.push("/users"),
+    });
+  }
+
+  items.push({
+    label: "",
+    key: "user",
+    icon: <UserOutlined />,
+    popupOffset: [-50, -150],
+    children: [
+      {
+        label: "Paramètres",
+        key: "settings",
+        icon: <SettingOutlined />,
+        onClick: () => router.push("/profile"),
+      },
+      {
+        label: "Déconnexion",
+        key: "logout",
+        icon: <LogoutOutlined />,
+        onClick: handleDisconnect,
+      },
+    ],
+  });
 
   if (!show || !user) return null;
 
-  return (
-    <StyledMenu inlineCollapsed selectable={false} mode="inline">
+  const desktop = (
+    <DesktopMenu mode="inline" inlineCollapsed selectable={false}>
       <Item icon={<HomeOutlined />} key="home-menu" onClick={() => router.push("/home")}>
         Accueil
       </Item>
@@ -67,12 +132,12 @@ const Sidebar = ({ user, show = false }) => {
       )}
       {canVote(user?.role) && (
         <Item icon={<TeamOutlined />} key="users-menu" onClick={() => router.push("/users")}>
-          Utilisateurs
+          Membres
         </Item>
       )}
       <Item
         icon={
-          <a href="https://discord.gg/RbcbBsD" target="_blank" rel="noopener noreferer">
+          <a href="https://discord.gg/RbcbBsD" target="_blank" rel="noopener noreferrer">
             <DiscordIcon />
           </a>
         }
@@ -99,7 +164,16 @@ const Sidebar = ({ user, show = false }) => {
           Déconnexion
         </Item>
       </SubMenu>
-    </StyledMenu>
+    </DesktopMenu>
+  );
+
+  return (
+    <Device>
+      {({ isMobile }) => {
+        if (isMobile) return <MobileMenu items={items} mode="horizontal" />;
+        return desktop;
+      }}
+    </Device>
   );
 };
 

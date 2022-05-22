@@ -9,5 +9,7 @@
         "preprocess": false
       }
     ]
+    //["import", { "libraryName": "antd" }],
+    //["inline-import", { "extensions": [".css"] }]
   ]
 }

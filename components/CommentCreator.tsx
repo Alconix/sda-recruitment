@@ -1,5 +1,7 @@
 import React, { useRef } from "react";
-import { Comment, Avatar, Form, Button, Input, List } from "antd";
+
+import { Avatar, Button, Form, Comment } from "antd";
+
 import sanitizeHtml from "sanitize-html";
 
 import Editor from "./Editor";
@@ -38,7 +40,7 @@ const CommentCreator = ({ user, setComments, applyId }) => {
 
     try {
       const commentRef = await db
-        .collection("appli")
+        .collection("applies")
         .doc(applyId)
         .collection("comments")
         .add(newComment);
@@ -54,17 +56,19 @@ const CommentCreator = ({ user, setComments, applyId }) => {
     }
   };
 
-  const avatar = user.pp === "NA" ? (
-    <Avatar style={{ backgroundColor: generateHSL(user.pseudo) }}>
-      {getAvatarFromName(user.pseudo)}
-    </Avatar>
-  ) : (
-    <Avatar src={user.pp} alt={user.pseudo} />
-  );
+  const avatar =
+    user.pp === "NA" ? (
+      <Avatar style={{ backgroundColor: generateHSL(user.pseudo) }}>
+        {getAvatarFromName(user.pseudo)}
+      </Avatar>
+    ) : (
+      <Avatar src={user.pp} alt={user.pseudo} />
+    );
 
   return (
     <Comment
-    avatar={avatar}
+      style={{ paddingBottom: "4rem" }}
+      avatar={avatar}
       content={
         <Form form={form} onFinish={(values) => onSubmit(values)}>
           <Form.Item

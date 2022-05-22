@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import sanitizeHtml from "sanitize-html";
 import { useRouter } from "next/router";
-import { Form, Input, Select, Button, Row, Radio, Col } from "antd";
+
+import { Form, Input, Radio, Select, Button, Col, Row } from "antd";
 
 import Editor from "./Editor";
 import firebase from "../firebase";
@@ -102,7 +103,7 @@ const validateValues = (values) => {
   return true;
 };
 
-const ApplyCreation = ({ user, edit, apply }) => {
+const ApplyCreation = ({ user, edit, apply, author }) => {
   const router = useRouter();
   const [form] = Form.useForm();
 
@@ -148,8 +149,8 @@ const ApplyCreation = ({ user, edit, apply }) => {
       };
 
       const id = router.query.id;
-      await firebase.firestore().collection("appli").doc(id.toString()).update(applyData);
-      // await sendLogNotification(user.pseudo, values.character, "edit")
+      await firebase.firestore().collection("applies").doc(id.toString()).update(applyData);
+      await sendLogNotification(user.pseudo, author, "edit");
 
       router.push(`/apply/${id.toString()}`);
     } else {
@@ -160,8 +161,8 @@ const ApplyCreation = ({ user, edit, apply }) => {
         state: "pending",
       };
 
-      const newApply = await firebase.firestore().collection("appli").add(applyData);
-      // await sendApplyNotification(user.pseudo, newApply.id);
+      const newApply = await firebase.firestore().collection("applies").add(applyData);
+      await sendApplyNotification(user.pseudo, newApply.id);
       router.push(`/apply/${newApply.id}`);
     }
   };
@@ -306,7 +307,7 @@ const ApplyCreation = ({ user, edit, apply }) => {
       >
         <Input />
       </Form.Item>
-      <Row gutter={8}>
+      <Row gutter={8} style={{ paddingBottom: "4rem" }}>
         <Col>
           <SendButton type="primary" htmlType="submit">
             Envoyer

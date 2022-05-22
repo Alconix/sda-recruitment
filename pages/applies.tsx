@@ -1,14 +1,13 @@
 import React, { VFC } from "react";
-import { Row, Typography } from "antd";
+import { Typography } from "antd";
 import { withAuthUser, withAuthUserTokenSSR, AuthAction } from "next-firebase-auth";
 
 import { canVote } from "../utils/permissions";
 import Layout from "../components/Layout";
 import ApplyTable from "../components/ApplyTable";
-import { Paper } from "../components/Layout.styles";
 import ApplyCreation from "../components/ApplyCreation";
 import { db } from "../firebase/admin";
-import { timestampToString } from "../utils/time";
+import Head from "next/head";
 
 type AppliesDataType = {
   applies: any[];
@@ -18,25 +17,27 @@ type AppliesDataType = {
 const AppliesPage: VFC<AppliesDataType> = ({ applies, user }) => {
   if (canVote(user.role)) {
     return (
-      <Layout sidebar user={user}>
-        <Row justify="center" align="middle" style={{ height: "100vh" }}>
-          <Paper>
-            <Typography.Title level={2}>Candidatures</Typography.Title>
-            <ApplyTable data={applies} />
-          </Paper>
-        </Row>
-      </Layout>
+      <>
+        <Head>
+          <title>Candidatures | Secret des Anciens</title>
+        </Head>
+        <Layout sidebar user={user}>
+          <Typography.Title level={2}>Candidatures</Typography.Title>
+          <ApplyTable data={applies} />
+        </Layout>
+      </>
     );
   } else {
     return (
-      <Layout sidebar user={user}>
-        <Row justify="center" align="middle">
-          <Paper>
-            <Typography.Title level={2}>Nouvelle candidature</Typography.Title>
-            <ApplyCreation user={user} edit={false} apply={null} />
-          </Paper>
-        </Row>
-      </Layout>
+      <>
+        <Head>
+          <title>Créer une candidature | Secret des Anciens</title>
+        </Head>
+        <Layout sidebar user={user}>
+          <Typography.Title level={2}>Nouvelle candidature</Typography.Title>
+          <ApplyCreation user={user} edit={false} apply={null} author={null} />
+        </Layout>
+      </>
     );
   }
 };
@@ -57,7 +58,7 @@ export const getServerSideProps = withAuthUserTokenSSR({
       : userData.creationTime;
 
     const isMember = canVote(user.data().role);
-    const res = await db.collection("appli").orderBy("date", "desc").get();
+    const res = await db.collection("applies").orderBy("date", "desc").get();
 
     const userApply = res.docs.find((doc) => doc.data().author_id === AuthUser.id);
 
@@ -65,8 +66,8 @@ export const getServerSideProps = withAuthUserTokenSSR({
       const applies = [];
 
       for (const apply of res.docs) {
-        const comments = await db.collection("appli").doc(apply.id).collection("comments").get();
-        const votes = await db.collection("appli").doc(apply.id).collection("votes").get();
+        const comments = await db.collection("applies").doc(apply.id).collection("comments").get();
+        const votes = await db.collection("applies").doc(apply.id).collection("votes").get();
         const author = await db.collection("users").doc(apply.data().author_id).get();
 
         applies.push({

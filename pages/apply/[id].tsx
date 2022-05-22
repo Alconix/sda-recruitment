@@ -1,15 +1,13 @@
 import React, { VFC } from "react";
-import { Row, Typography } from "antd";
+import { Typography } from "antd";
+
 import { withAuthUser, withAuthUserTokenSSR, AuthAction } from "next-firebase-auth";
 
 import { db, storage } from "../../firebase/admin";
-import { isAvatarValid } from "../../utils/avatar";
-
 import Layout from "../../components/Layout";
 import ApplyContent from "../../components/ApplyContent";
-import { Paper } from "../../components/Layout.styles";
 import { canVote } from "../../utils/permissions";
-import { timestampToString } from "../../utils/time";
+import Head from "next/head";
 
 type ApplyDataType = {
   isMember: boolean;
@@ -20,14 +18,15 @@ type ApplyDataType = {
 
 const ApplyPage: VFC<ApplyDataType> = ({ apply, user, rio }) => {
   return (
-    <Layout sidebar user={user}>
-      <Row justify="center" align="middle" style={{ height: "100%" }}>
-        <Paper>
-          <Typography.Title level={2}>Candidature de {apply.name}</Typography.Title>
-          <ApplyContent data={apply} user={user} rio={rio} />
-        </Paper>
-      </Row>
-    </Layout>
+    <>
+      <Head>
+        <title>Candidature de {apply.name} | Secret des Anciens</title>
+      </Head>
+      <Layout sidebar user={user}>
+        <Typography.Title level={2}>Candidature de {apply.name}</Typography.Title>
+        <ApplyContent data={apply} user={user} rio={rio} />
+      </Layout>
+    </>
   );
 };
 
@@ -37,7 +36,7 @@ export const getServerSideProps = withAuthUserTokenSSR({
   try {
     const id = req.url.match(/apply\/([^\/|.]+)/)[1];
 
-    const applyDoc = db.collection("appli").doc(id);
+    const applyDoc = db.collection("applies").doc(id);
 
     const user = await db.collection("users").doc(AuthUser.id).get();
     const res = await applyDoc.get();

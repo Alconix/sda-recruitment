@@ -1,5 +1,6 @@
 import React from "react";
-import { Comment, Avatar, Tooltip } from "antd";
+import { Avatar, Comment, Tooltip } from "antd";
+
 import sanitizeHtml from "sanitize-html";
 import ReactHtmlParser from "react-html-parser";
 

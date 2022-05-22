@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-
 import { useRouter } from "next/router";
 
-import { GoogleOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Row, Col, Form, Input, Checkbox, Button, Divider, message } from "antd";
 
+import { GoogleOutlined, LockOutlined, MailOutlined } from "../utils/icons";
 import { StyledForm } from "./Auth.styles";
 import firebase from "../firebase";
 
@@ -14,21 +13,6 @@ export const Login = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
-
-  const redirectUser = (location: string | string[]) => {
-    switch (location) {
-      case "profile":
-        router.push("/profile");
-        break;
-      case "apply":
-        if (router.query.id) router.push(`/apply/${router.query.id}`);
-        else router.push("/");
-        break;
-      default:
-        router.push("/");
-        break;
-    }
-  };
 
   const tError = (error): string => {
     if (error.code === "auth/too-many-requests")
@@ -46,7 +30,6 @@ export const Login = () => {
 
     try {
       await firebase.auth().signInWithEmailAndPassword(values.email, values.password);
-      redirectUser(router.query.from);
     } catch (err) {
       message.error({
         content: tError(err),

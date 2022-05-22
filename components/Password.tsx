@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import { Form, Input, Button, Row, Col, Typography } from "antd";
-import { GoogleOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
+import { Form, Input, Button, Typography } from "antd";
 
+import { MailOutlined } from "../utils/icons";
 import { StyledForm } from "./Auth.styles";
 import firebase from "../firebase";
 

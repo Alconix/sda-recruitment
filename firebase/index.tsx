@@ -1,7 +1,5 @@
 import firebase from "firebase/app";
 
-import "antd/dist/antd.css";
-
 import "firebase/auth";
 import "firebase/firestore";
 import "firebase/storage";
