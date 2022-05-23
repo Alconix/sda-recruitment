@@ -1,9 +1,13 @@
 import React from "react";
-
-import { Button, BackTop, Typography, Carousel, Timeline, Image } from "antd";
+import styled from "styled-components";
+import { Button, BackTop, Typography, Carousel, Timeline, Image, Row, Col } from "antd";
 import { useRouter } from "next/router";
 
 const { Title } = Typography;
+
+const StyledTitle = styled(Title)`
+  margin-top: 2rem;
+`;
 
 const Home = () => {
   const router = useRouter();
@@ -11,14 +15,14 @@ const Home = () => {
   return (
     <>
       <BackTop />
-      <Carousel arrows>
-        <div>
-          <Image src="/denat1.jpg" />
-        </div>
-      </Carousel>
-      <Title level={2} id="presentation" style={{ marginTop: "2rem" }}>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <Title level={1}>Secret des Anciens</Title>
+        <img src="logo.png" style={{ width: "10rem", position: "absolute", right: 0, top: 0 }} />
+      </div>
+
+      <StyledTitle level={2} id="presentation">
         Présentation
-      </Title>
+      </StyledTitle>
       <p>
         Nous sommes une guilde installée depuis très longtemps sur les serveurs Vol'jin / Chants
         Eternels et qui a pour vocation de progresser ensemble et dans une bonne ambiance dans le
@@ -27,9 +31,9 @@ const Home = () => {
         minuit.
       </p>
       <p></p>
-      <Title level={2} id="recruitment" style={{ marginTop: "2rem" }}>
+      <StyledTitle level={2} id="recruitment">
         Recrutement
-      </Title>
+      </StyledTitle>
       <p>
         Nous ne recherchons pas de classe / spécialisation en particulier mais des joueurs qui
         comprennent leur spé et capable de s'intégrer dans le roster. Notre système de recrutement
@@ -37,12 +41,12 @@ const Home = () => {
         motivation.
       </p>
       <p>
-        Procédure de recrutement:
+        La procédure de recrutement se déroule de la façon suivante:
         <ol>
           <li>Créez un compte et postez votre candidature en cliquant sur le bouton plus bas.</li>
           <li>Les membres de la guilde posent leur questions / reactions sur votre candidature.</li>
           <li>
-            Si votre candidature est convaincante, vous êtes invité pour une période de test d'une
+            Si votre candidature nous intéresse, vous êtes invité pour une période de test d'une
             durée d'un mois pour s'assurer de votre engagement et que le courant passe avec le reste
             de la guilde.
           </li>
@@ -56,9 +60,9 @@ const Home = () => {
         Accès aux candidatures
       </Button>
 
-      <Title level={2} id="contact" style={{ marginTop: "2rem" }}>
+      <StyledTitle level={2} id="contact">
         Contact
-      </Title>
+      </StyledTitle>
       <p>
         En cas de question ou de problème, n'hésitez pas à rejoindre le{" "}
         <a href="https://discord.gg/RbcbBsD" target="_blank" rel="noopener noreferrer">
@@ -68,11 +72,11 @@ const Home = () => {
         Gardien) en jeu ou sur discord.
       </p>
       <p>Pour les problèmes concernant le site, contactez Alco#0822 sur discord.</p>
-      <Title level={2} id="progress" style={{ marginTop: "2rem" }}>
+      <StyledTitle level={2} id="progress">
         Progress
-      </Title>
+      </StyledTitle>
       <Timeline style={{ marginTop: "3rem" }}>
-        <Timeline.Item color="grey">Sépulcre des fondateurs : 10/11 Héroïque</Timeline.Item>
+        <Timeline.Item color="grey">Sépulcre des fondateurs : 11/11 Héroïque</Timeline.Item>
         <Timeline.Item color="grey">Sanctum de Domination : 10/10 Héroïque</Timeline.Item>
         <Timeline.Item color="grey">Château Nathria : 10/10 Héroïque</Timeline.Item>
         <Timeline.Item color="blue">Ny'alotha : 12/12 Héroïque</Timeline.Item>
