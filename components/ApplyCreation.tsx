@@ -270,8 +270,8 @@ const ApplyCreation = ({ user, edit, apply, author }) => {
         rules={[{ required: true, message: "Veuillez entrer une réponse !" }]}
       >
         <Radio.Group onChange={(event: any) => setShowGuilds(event.target.value === "yes")}>
-          <Radio value="yes">Oui</Radio>
-          <Radio value="no">Non</Radio>
+          <Radio value="Oui">Oui</Radio>
+          <Radio value="Non">Non</Radio>
         </Radio.Group>
       </Form.Item>
       {showGuilds && (
@@ -294,8 +294,8 @@ const ApplyCreation = ({ user, edit, apply, author }) => {
         rules={[{ required: true, message: "Veuillez entrer une réponse !" }]}
       >
         <Radio.Group>
-          <Radio value="yes">Oui</Radio>
-          <Radio value="no">Non</Radio>
+          <Radio value="Oui">Oui</Radio>
+          <Radio value="Non">Non</Radio>
         </Radio.Group>
       </Form.Item>
       <Question>Combien d'heures jouez-vous par semaine ?</Question>

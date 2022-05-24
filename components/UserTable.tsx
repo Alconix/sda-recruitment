@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import { Typography, Table, notification, Tooltip, Select, Input, Space, Button } from "antd";
 
@@ -32,6 +32,10 @@ const notificationFailure = () => {
 
 const UserTable = ({ user, users }) => {
   const [searchName, setSearchName] = useState<any>("");
+  const [data, setData] = useState(
+    users.sort((a, b) => new Date(b.creationTime).getTime() - new Date(a.creationTime).getTime())
+  );
+
   let searchInput = undefined;
 
   const getColumnSearchNameProps = () => ({
@@ -97,11 +101,16 @@ const UserTable = ({ user, users }) => {
     setSearchName("");
   };
 
-  const onRoleChange = async (value, user) => {
+  const onRoleChange = async (value, user, index) => {
     try {
       await db.collection("users").doc(user.id).update({
         role: value,
       });
+
+      const newData = [...data];
+      newData[index] = { ...newData[index], role: value };
+      setData(newData);
+
       notificationSuccess();
     } catch (err) {
       console.error(err);
@@ -135,6 +144,28 @@ const UserTable = ({ user, users }) => {
     },
   ];
 
+  const roleDataMod = (elt, record, index) => {
+    if (elt === "officier" || elt === "admin") {
+      return "Officier";
+    } else {
+      return (
+        <Select
+          value={record.role}
+          onChange={(value) => {
+            onRoleChange(value, record, index);
+            elt = value;
+          }}
+          style={{ width: "8rem" }}
+        >
+          <Option value="apply">Apply</Option>
+          <Option value="membre">Membre</Option>
+        </Select>
+      );
+    }
+  };
+
+  const roleDateUser = (elt) => `${elt[0].toUpperCase()}${elt.slice(1)}`;
+
   const roleData: { [k: string]: any } = {
     title: "Role",
     width: 300,
@@ -144,35 +175,28 @@ const UserTable = ({ user, users }) => {
       else if (a.role > b.role) return 1;
       else return 0;
     },
+    render: (elt, record, index) =>
+      canModerate(user.role) ? roleDataMod(elt, record, index) : roleDateUser(elt),
   };
-
-  if (canModerate(user.role)) {
-    roleData.render = (elt, record) => {
-      if (elt === "officier" || elt === "admin") {
-        return "Officier";
-      } else {
-        return (
-          <Select
-            defaultValue={elt}
-            onChange={(value) => onRoleChange(value, record)}
-            style={{ width: "8rem" }}
-          >
-            <Option value="apply">Apply</Option>
-            <Option value="membre">Membre</Option>
-          </Select>
-        );
-      }
-    };
-  } else {
-    roleData.render = (elt) => `${elt[0].toUpperCase()}${elt.slice(1)}`;
-  }
 
   columns.push(roleData);
 
   return (
     <>
       <Typography.Title level={2}>Utilisateurs</Typography.Title>
-      <StyledTable dataSource={users} columns={columns} rowClassName="user-row" />
+      <StyledTable
+        sortOrder="descend"
+        dataSource={data}
+        columns={columns}
+        rowClassName="user-row"
+        onRow={(record, rowIndex) => {
+          return {
+            onClick: () => {
+              console.log(record);
+            },
+          };
+        }}
+      />
     </>
   );
 };
