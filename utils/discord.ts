@@ -23,7 +23,7 @@ export const sendLogNotification = async (user, name, state) => {
 
   if (state === "delete") content = `**[DELETE][${date}]** ${user.pseudo} deleted ${name}'s apply`;
   else if (state === "edit") content = `**[EDIT][${date}]** ${user.pseudo} edited ${name}'s apply`;
-  else content = `**[STATUS][${date}]** ${user} changed ${name.pseudo}'s apply status to ${state}`;
+  else content = `**[STATUS][${date}]** ${user.pseudo} changed ${name}'s apply status to ${state}`;
 
   await fetch(process.env.NEXT_PUBLIC_DISCORD_LOG_HOOK_URL, {
     method: "POST",
