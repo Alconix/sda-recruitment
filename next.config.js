@@ -2,6 +2,7 @@ const { ContextReplacementPlugin } = require("webpack");
 const path = require("path");
 
 module.exports = {
+  compiler: { styledComponents: true },
   plugins: [new ContextReplacementPlugin(/moment[\/\\]locale$/, /fr/)],
   resolve: {
     alias: {
