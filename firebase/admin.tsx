@@ -8,7 +8,7 @@ if (!admin.apps.length) {
       clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
     }),
     databaseURL: "https://secretdesanciens.firebaseio.com",
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    storageBucket: `gs://${process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET}`,
   });
 }
 
