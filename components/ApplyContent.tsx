@@ -192,15 +192,15 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
         <Typography.Title level={4}>
           Avez vous des personnages dans d'autres guildes ?
         </Typography.Title>
-        <p>{data.content[6] === "yes" ? "Oui" : "Non"}</p>
-        {data.content[6] === "yes" && (
+        <p>{data.content[6].toLowerCase() === "oui" ? "Oui" : "Non"}</p>
+        {data.content[6].toLowerCase() === "oui" && (
           <>
             <Typography.Title level={4}>Indiquez le nom des guildes</Typography.Title>
             <p>{data.content[7]}</p>
           </>
         )}
         <Typography.Title level={4}>Avez-vous un micro / casque ?</Typography.Title>
-        <p>{data.content[8] === "yes" ? "Oui" : "Non"}</p>
+        <p>{data.content[8].toLowerCase() === "oui" ? "Oui" : "Non"}</p>
         <Typography.Title level={4}>Combien d'heures jouez vous par semaine ?</Typography.Title>
         <p>{data.content[9]}</p>
         {rio.name != null && (
