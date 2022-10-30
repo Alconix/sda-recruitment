@@ -24,7 +24,6 @@ import CommentCreator from "./CommentCreator";
 import { timestampToString } from "../utils/time";
 import { useRouter } from "next/router";
 import { canEdit, canModerate, canVote } from "../utils/permissions";
-import { sendLogNotification } from "../utils/discord";
 import firebase from "../firebase";
 
 const db = firebase.firestore();
@@ -76,6 +75,8 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
 
   const name = data.content[0].split("-", 2)[0];
   const realm = data.content[0].split("-", 2)[1].replace(" ", "-").replace("'", "");
+  const formattedRealm =
+    realm === "Voljin" ? "voljin" : realm === "Chantséternels" ? "chants-eternels" : realm;
 
   const percentage = Math.floor((score / votes.length) * 100);
 
@@ -101,7 +102,14 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
     try {
       setLoadingDelete(true);
       await db.collection("applies").doc(router.query.id.toString()).delete();
-      await sendLogNotification(user.pseudo, data.name, "delete");
+      await fetch("/api/statusNotification", {
+        method: "POST",
+        body: JSON.stringify({
+          user: user.pseudo,
+          name: data.name,
+          state: "delete",
+        }),
+      });
       router.push("/applies");
     } catch (err) {
       setLoadingDelete(false);
@@ -148,7 +156,14 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
         state: change,
       });
 
-      await sendLogNotification(user, data.name, change);
+      await fetch("/api/statusNotification", {
+        method: "POST",
+        body: JSON.stringify({
+          user: user.pseudo,
+          name: data.name,
+          state: change,
+        }),
+      });
     } catch (err) {
       console.log(err);
       message.error("Une erreur est survenue lors de la modification.");
@@ -245,7 +260,7 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
         <SectionRow justify="center" gutter={16}>
           <Col>
             <a
-              href={`https://raider.io/characters/eu/${realm}/${name}`}
+              href={`https://raider.io/characters/eu/${formattedRealm}/${name}`}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -254,7 +269,7 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
           </Col>
           <Col>
             <a
-              href={`https://www.warcraftlogs.com/character/eu/${realm}/${name}`}
+              href={`https://www.warcraftlogs.com/character/eu/${formattedRealm}/${name}`}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -263,7 +278,7 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
           </Col>
           <Col>
             <a
-              href={`https://worldofwarcraft.com/fr-fr/character/eu/${realm}/${name}`}
+              href={`https://worldofwarcraft.com/fr-fr/character/eu/${formattedRealm}/${name}`}
               target="_blank"
               rel="noopener noreferrer"
             >

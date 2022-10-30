@@ -11,7 +11,7 @@ const init = {
 };
 
 const MyEditor = (props) => (
-  <Editor apiKey={process.env.TINYMCE_API_KEY} init={init} onE {...props} />
+  <Editor apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY} init={init} onE {...props} />
 );
 
 export default MyEditor;

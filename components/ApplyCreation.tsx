@@ -7,7 +7,6 @@ import { Form, Input, Radio, Select, Button, Col, Row } from "antd";
 
 import Editor from "./Editor";
 import firebase from "../firebase";
-import { sendApplyNotification, sendLogNotification } from "../utils/discord";
 
 const { Option } = Select;
 
@@ -150,7 +149,14 @@ const ApplyCreation = ({ user, edit, apply, author }) => {
 
       const id = router.query.id;
       await firebase.firestore().collection("applies").doc(id.toString()).update(applyData);
-      await sendLogNotification(user.pseudo, author, "edit");
+      await fetch("/api/statusNotification", {
+        method: "POST",
+        body: JSON.stringify({
+          user: user.pseudo,
+          name: author,
+          state: "edit",
+        }),
+      });
 
       router.push(`/apply/${id.toString()}`);
     } else {
@@ -162,7 +168,11 @@ const ApplyCreation = ({ user, edit, apply, author }) => {
       };
 
       const newApply = await firebase.firestore().collection("applies").add(applyData);
-      await sendApplyNotification(user.pseudo, newApply.id);
+
+      await fetch("/api/applyNotification", {
+        method: "POST",
+        body: JSON.stringify({ name: user.pseudo, id: newApply.id }),
+      });
       router.push(`/apply/${newApply.id}`);
     }
   };
