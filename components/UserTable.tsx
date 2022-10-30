@@ -189,13 +189,6 @@ const UserTable = ({ user, users }) => {
         dataSource={data}
         columns={columns}
         rowClassName="user-row"
-        onRow={(record, rowIndex) => {
-          return {
-            onClick: () => {
-              console.log(record);
-            },
-          };
-        }}
       />
     </>
   );
