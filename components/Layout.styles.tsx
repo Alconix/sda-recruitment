@@ -5,8 +5,8 @@ export const Paper = styled(Col)`
   width: 60rem;
   background-color: white;
   padding: 2rem;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  margin-top: 1.2rem;
+  margin-bottom: 0.7rem;
   -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
   -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
@@ -36,6 +36,4 @@ export const Paper = styled(Col)`
     -o-transform: skew(8deg) rotate(3deg);
     transform: skew(8deg) rotate(3deg);
   }
-
-  margin-bottom: 4rem;
 `;

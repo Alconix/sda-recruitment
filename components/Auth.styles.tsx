@@ -8,23 +8,6 @@ export const Container = styled.div`
   padding-bottom: ${(props) => (props.mobile ? "3rem" : "0")};
 `;
 
-export const Background = styled.div`
-  position: fixed;
-  left: 0;
-  right: 0;
-  z-index: 1;
-  display: block;
-  background-image: url("/background-df.png");
-  background-size: cover;
-  height: 100vh;
-  -webkit-filter: blur(5px);
-  -moz-filter: blur(5px);
-  -o-filter: blur(5px);
-  -ms-filter: blur(5px);
-  filter: blur(5px);
-  transform: scale(1.1);
-`;
-
 export const Paper = styled(Tabs)`
   padding: 1rem;
   background-color: white;

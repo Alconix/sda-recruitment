@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Router from "next/router";
 import Head from "next/head";
+import { isMobile } from "react-device-detect";
 
 import type { AppProps } from "next/app";
 
@@ -46,6 +47,19 @@ const App = ({ Component, pageProps }: AppProps) => {
     <>
       <Head>
         <link rel="shortcut icon" href="/favicon.ico" />
+        <style>
+          {!isMobile &&
+            `
+              body {
+                background-image: url(/background-df.png);
+                background-size: cover;
+                background-attachment: fixed;
+                background-repeat: no-repeat;
+                background-position: 82% 10%;
+              }
+            }
+          `}
+        </style>
       </Head>
       {component}
     </>

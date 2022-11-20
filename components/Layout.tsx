@@ -27,18 +27,6 @@ const Footer = styled.footer`
   }
 `;
 
-const Background = styled.div`
-  background-image: url(/background-df.png);
-  background-size: cover;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-position: 82% 10%;
-  overflow-x: hidden;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-`;
-
 type PropsType = {
   children: any;
   user?: any;
@@ -52,10 +40,10 @@ const Layout = ({ auth, children, user, sidebar = false, ...props }: PropsType) 
       if (isMobile) {
         if (auth) {
           return (
-            <Background mobile>
+            <>
               <Container mobile>{children}</Container>
               <Sidebar show={sidebar} user={user} />
-            </Background>
+            </>
           );
         } else {
           return (
@@ -67,7 +55,7 @@ const Layout = ({ auth, children, user, sidebar = false, ...props }: PropsType) 
         }
       } else {
         return (
-          <Background>
+          <>
             <Sidebar show={sidebar} user={user} />
             <Container>
               {auth ? (
@@ -99,7 +87,7 @@ const Layout = ({ auth, children, user, sidebar = false, ...props }: PropsType) 
                 Warcraftlogs
               </a>{" "}
             </Footer>
-          </Background>
+          </>
         );
       }
     }}
