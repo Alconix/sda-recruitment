@@ -214,14 +214,16 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
                 />
               </Col>
             )}
-            {rio.raid_progression != null && (
-              <Col>
-                <Statistic
-                  title="Raid"
-                  value={rio.raid_progression["sepulcher-of-the-first-ones"].summary}
-                />
-              </Col>
-            )}
+            {/* rio.raid_progression != null &&
+              rio.raid_progression["sepulcher-of-the-first-ones"] != null &&
+              rio.raid_progression["sepulcher-of-the-first-ones"].summary != null && (
+                <Col>
+                  <Statistic
+                    title="Raid"
+                    value={rio.raid_progression["sepulcher-of-the-first-ones"].summary}
+                  />
+                </Col>
+              )*/}
           </ScoreRow>
         )}
         {canVote(user.role) && (
