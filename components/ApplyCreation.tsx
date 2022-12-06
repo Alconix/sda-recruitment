@@ -234,12 +234,12 @@ const ApplyCreation = ({ user, edit, apply, author }) => {
           }}
         />
       </Form.Item>
-      <Question>Présentez-vous</Question>
+      <Question>Présentez-vous IRL</Question>
       <Form.Item
         name="pres"
         getValueProps={(value: any) => value?.level?.content}
         hasFeedback
-        help="Décrivez brièvement qui vous êtes : age, sexe, étude/métier, passions..."
+        help="Décrivez brièvement qui vous êtes qu'on apprenne à se connaître"
         rules={rules}
       >
         <Editor
