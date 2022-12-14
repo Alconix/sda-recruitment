@@ -88,11 +88,18 @@ export const getServerSideProps = withAuthUserTokenSSR({
     const name = res.data().content[0].split("-", 2)[0];
     const realm = res.data().content[0].split("-", 2)[1].replace("'", "");
 
-    const rioReq = await fetch(
-      `https://raider.io/api/v1/characters/profile?region=eu&realm=${realm}&name=${name}&fields=raid_progression,mythic_plus_scores_by_season:current`
-    );
+    let rio = null;
 
-    const rio = await rioReq.json();
+    try {
+      const rioReq = await fetch(
+        `https://raider.io/api/v1/characters/profile?region=eu&realm=${realm}&name=${name}&fields=raid_progression,mythic_plus_scores_by_season:current`
+      );
+
+      rio = await rioReq.json();
+    } catch (e) {
+      console.error("Error while fetching raider io data.");
+      console.log(e);
+    }
 
     const userData = user.data();
     userData.uid = AuthUser.id;

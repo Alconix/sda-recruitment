@@ -203,7 +203,7 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
         <p>{data.content[8].toLowerCase() === "oui" ? "Oui" : "Non"}</p>
         <Typography.Title level={4}>Combien d'heures jouez vous par semaine ?</Typography.Title>
         <p>{data.content[9]}</p>
-        {rio.name != null && (
+        {rio != null && rio.name != null && (
           <ScoreRow gutter={16} className="scores">
             {rio.mythic_plus_scores_by_season != null && (
               <Col>
