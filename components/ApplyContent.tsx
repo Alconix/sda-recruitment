@@ -170,6 +170,8 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
     }
   };
 
+  console.log(rio.raid_progression);
+
   return (
     <>
       <DateContent>
@@ -214,16 +216,16 @@ const ApplyContent = ({ data, user, rio }: ApplyProps) => {
                 />
               </Col>
             )}
-            {/* rio.raid_progression != null &&
-              rio.raid_progression["sepulcher-of-the-first-ones"] != null &&
-              rio.raid_progression["sepulcher-of-the-first-ones"].summary != null && (
+            { rio.raid_progression != null &&
+              rio.raid_progression["vault-of-the-incarnates"] != null &&
+              rio.raid_progression["vault-of-the-incarnates"].summary != null && (
                 <Col>
                   <Statistic
                     title="Raid"
-                    value={rio.raid_progression["sepulcher-of-the-first-ones"].summary}
+                    value={rio.raid_progression["vault-of-the-incarnates"].summary}
                   />
                 </Col>
-              )*/}
+            )}
           </ScoreRow>
         )}
         {canVote(user.role) && (
