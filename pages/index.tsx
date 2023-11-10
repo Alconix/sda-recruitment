@@ -4,44 +4,35 @@ import Layout from "../components/Layout";
 import { withAuthUser, withAuthUserTokenSSR, AuthAction } from "next-firebase-auth";
 
 type IndexDataType = {
-  applies: any[];
-  user: any;
+    applies: any[];
+    user: any;
 };
 
 const IndexPage: VFC<IndexDataType> = ({ user }) => {
-  return (
-    <Layout sidebar={user != undefined} user={user}>
-      <div />
-    </Layout>
-  );
+    return (
+        <Layout sidebar={user != undefined} user={user}>
+            <div />
+        </Layout>
+    );
 };
 
 export const getServerSideProps = withAuthUserTokenSSR()(async ({ AuthUser, req }) => {
-  try {
-    if (AuthUser.id === null) {
-      return {
-        redirect: {
-          destination: "/home",
-          permanent: false,
-        },
-      };
+    try {
+        return {
+            redirect: {
+                destination: "/home",
+                permanent: true,
+            },
+        };
+    } catch (err) {
+        console.log(err);
+
+        return {
+            props: {} as never,
+        };
     }
-
-    return {
-      redirect: {
-        destination: "/applies",
-        permanent: false,
-      },
-    };
-  } catch (err) {
-    console.log(err);
-
-    return {
-      props: {} as never,
-    };
-  }
 });
 
 export default withAuthUser<IndexDataType>({
-  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+    whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
 })(IndexPage);
